@@ -1,0 +1,264 @@
+(
+    all: [
+        (0x00, "PAGE", WriteByte, ReadByte),
+        (0x01, "OPERATION", WriteByte, ReadByte),
+        (0x02, "ON_OFF_CONFIG", WriteByte, ReadByte),
+
+        (0x19, "CAPABILITY", Illegal, ReadByte),
+
+        // (0x46, "IOUT_OC_FAULT_LIMIT", WriteWord, ReadWord),
+
+        (0x79, "STATUS_WORD", WriteWord, ReadWord),
+        (0x7a, "STATUS_VOUT", WriteByte, ReadByte),
+        (0x7b, "STATUS_IOUT", WriteByte, ReadByte),
+        (0x7c, "STATUS_INPUT", WriteByte, ReadByte),
+        (0x7d, "STATUS_TEMPERATURE", WriteByte, ReadByte),
+        (0x7e, "STATUS_CML", WriteByte, ReadByte),
+        
+        (0x80, "STATUS_MFR_SPECIFIC", WriteByte, ReadByte),
+
+        // (0x88, "READ_VIN", Illegal, ReadWord),
+        // (0x8b, "READ_VOUT", Illegal, ReadWord),
+        // (0x8c, "READ_IOUT", Illegal, ReadWord),
+        // (0x8d, "READ_TEMPERATURE_1", Illegal, ReadWord),
+        
+        (0x98, "PMBUS_REVISION", Illegal, ReadByte),
+        (0x99, "MFR_ID", WriteBlock, ReadBlock),
+        (0x9a, "MFR_MODEL", WriteBlock, ReadBlock),
+        (0x9b, "MFR_REVISION", WriteBlock, ReadBlock),
+        (0x9c, "MFR_LOCATION", WriteBlock, ReadBlock),
+        (0x9d, "MFR_DATE", WriteBlock, ReadBlock),
+        (0x9e, "MFR_SERIAL", WriteBlock, ReadBlock),
+
+
+        (0xb0, "MFR_CURVE_CC", WriteWord, ReadWord),
+        (0xb1, "MFR_CURVE_CV", WriteWord, ReadWord),
+        (0xb2, "MFR_CURVE_FV", WriteWord, ReadWord),
+        (0xb3, "MFR_CURVE_TC", WriteWord, ReadWord),
+        (0xb4, "MFR_CURVE_CONFIG", WriteWord, ReadWord),
+        (0xb5, "MFR_CURVE_CC_TIMEOUT", WriteWord, ReadWord),
+        (0xb6, "MFR_CURVE_CV_TIMEOUT", WriteWord, ReadWord),
+        (0xb7, "MFR_CURVE_FLOAT_TIMEOUT", WriteWord, ReadWord),
+        (0xb8, "MFR_CHG_STATUS", Illegal, ReadWord),
+        (0xbe, "MFR_SYSTEM_CONFIG", WriteWord, ReadWord),
+        (0xbf, "MFR_SYSTEM_STATUS", Illegal, ReadWord),
+    ],
+    numerics:[
+        //("VOUT_MODE", Linear11, Volts),
+        //("VOUT_COMMAND", Linear11, Volts),
+        //("VOUT_TRIM", Linear11, Volts),
+        ("IOUT_OC_FAULT_LIMIT", Linear11, Amperes),
+        
+        ("READ_VIN", Linear11, Volts),
+        ("READ_VOUT", Linear11, Volts),
+        ("READ_IOUT", Linear11, Amperes),
+        ("READ_TEMPERATURE_1", Linear11, Celsius),
+
+        ("MFR_CURVE_CC", Linear11, Volts),
+        ("MFR_CURVE_CV", Linear11, Volts),
+        ("MFR_CURVE_FV", Linear11, Volts),
+        ("MFR_CURVE_TC", Linear11, Amperes),
+      
+        ("MFR_CURVE_CC_TIMEOUT", Linear11, Seconds),
+        ("MFR_CURVE_CV_TIMEOUT", Linear11, Seconds),
+        ("MFR_CURVE_FLOAT_TIMEOUT", Linear11, Seconds),
+
+    ],
+    structured:{
+            "MFR_CURVE_CONFIG": {
+                "FVTOE": (
+                    name: "Float Constant Voltage Stage Timeout Indication Enable",
+                    bits: Bit(10),
+                    values: Sentinels({
+                            "Disabled": (0b0, "disabled"),
+                            "Enabled": (0b1, "enabled"),
+                        })
+                ),
+                "CVTOE": (
+                    name: "Constant Voltage Stage Timeout Indication Enable",
+                    bits: Bit(9),
+                    values: Sentinels({
+                            "Disabled": (0b0, "disabled"),
+                            "Enabled": (0b1, "enabled"),
+                        })
+                ),
+                "CCTOE": (
+                    name: "Constant Current Stage Timeout Indication Enable",
+                    bits: Bit(8),
+                    values: Sentinels({
+                            "Disabled": (0b0, "disabled"),
+                            "Enabled": (0b1, "enabled"),
+                        })
+                ),
+                "CUVE": (
+                    name: "Charge Curve Function Enable",
+                    bits: Bit(7),
+                    values: Sentinels({
+                            "Disabled": (0b0, "disabled - power supply mode"),
+                            "Enabled": (0b1, "enabled - charger mode"),
+                        })
+                ),
+                "STGS": (
+                    name: "2/3 Stage Charge Setting",
+                    bits: Bit(6),
+                    values: Sentinels({
+                            "ThreeStageCharge": (0b0, "3 stage charge"),
+                            "TwoStageCharge": (0b1, "2 stage charge"),
+                        })
+                ),
+                "TCS": (
+                    name: "Temperature Compensation Setting",
+                    bits: Bitrange(High(3), Low(2)),
+                    values: Sentinels({
+                            "Disable":     (0b00, "disable"),
+                            "Minus3mV": (0b01, "-3mV/deg/cell"),
+                            "Minus4mV": (0b10, "-4mV/deg/cell"),
+                            "Minus5mV": (0b11, "-5mV/deg/cell"),
+                        })
+                ),
+                "CUVS": (
+                    name: "Charge Curve Selection",
+                    bits: Bitrange(High(1), Low(0)),
+                    values: Sentinels({
+                            "CustomChargeCurve":  (0b00, "custom"),
+                            "GelBattery":              (0b01, "gel"),
+                            "FloodedBattery":          (0b10, "flooded"),
+                            "AGMBattery":              (0b11, "agm"),
+                        })
+                ),
+            },
+            "MFR_CHG_STATUS": {
+                "FVTOF": (
+                    name: "Time Out Flag of Float Mode",
+                    bits: Bit(15),
+                    values: Sentinels({
+                        "NoFVTimeout": (0b0, "No FV Timeout"),
+                        "FCTimeout":    (0b1, "FV Timeout"),
+                    }),
+                ),
+                "CVTOF": (
+                    name: "Time Out Flag of Constant Voltage Mode",
+                    bits: Bit(14),
+                    values: Sentinels({
+                        "NoCVTimeout": (0b0, "No CV Timeout"),
+                        "CVTimeout":    (0b1, "CV Timeout"),
+                    }),
+                
+                ),
+                "CCTOF": (
+                    name: "Time Out Flag of Constant Current Mode",
+                    bits: Bit(13),
+                    values: Sentinels({
+                        "NoCCTimeout": (0b0, "No CC Timeout"),
+                        "CCTimeout":    (0b1, "CC Timeout"),
+                    }),
+                ),
+                "BTNC": (
+                    name: "Battery Detection",
+                    bits: Bit(11),
+                    values: Sentinels({
+                        "BatDetected":      (0b0, "Battery detected"),
+                        "NoBatDetected":    (0b1, "No battery detected"),
+                    }),
+                ),
+                "NTCER": (
+                    name: "Temperature Compensation Status",
+                    bits: Bit(10),
+                    values: Sentinels({
+                        "NoShort": (0b0, "No short-circuit in the NTC circuit"),
+                        "Short":    (0b1, "Short-circuit in the NTC circuit"),
+                    }),
+                ),
+                "FVM": (
+                    name: "Float Mode Status",
+                    bits: Bit(3),
+                    values: Sentinels({
+                        "NotInFloat": (0b0, "Not in Float mode"),
+                        "InFloat":    (0b1, "In Float mode"),
+                    }),
+                ),
+                "CVM": (
+                    name: "Constant Voltage Mode Status",
+                    bits: Bit(2),
+                    values: Sentinels({
+                        "NotInCV": (0b0, "Not in CV mode"),
+                        "InCV":    (0b1, "In CV mode"),
+                    }),
+                ),
+                "CCM": (
+                    name: "Constant Current Mode Status",
+                    bits: Bit(1),
+                    values: Sentinels({
+                        "NotInCC": (0b0, "Not in CC mode"),
+                        "InCC":    (0b1, "In CC mode"),
+                    }),
+                ),
+                "FULLM": (
+                    name: "Fully Charged Mode Status",
+                    bits: Bit(0),
+                    values: Sentinels({
+                        "NotFullyCharged":  (0b0, "Not Fully Charged"),
+                        "FullyCharged":     (0b1, "Fully Charged"),
+                    }),
+                ),
+            },
+            "MFR_SYSTEM_CONFIG": {
+                "OPERATION_INIT": (
+                    name: "Initial Operational Behaviour",
+                    bits: Bitrange(High(2), Low(1)),
+                    values: Sentinels({
+                        "PowerOnWith0x00_OFF":      (0b00, "power on with 0x00: OFF"),
+                        "PowerOnWith0x80_ON":       (0b01, "power on with 0x80: ON(default)"),
+                        "PowerOnWithLastSetting":   (0b10, "power on with the last setting"),
+                    }),
+                ),
+                "PM_CTRL": (
+                    name: "PM_CTRL",
+                    bits: Bit(0),
+                    values: Sentinels({
+                        "ControlBySVR_PV_PC":   (0b0, "Output voltage and current controlled by SVR/PV/PC (default)"),
+                        "ControlByPMBus":       (0b1, "Output voltage, current and remote ON/OFF controlled by PMBus (VOUT_TRIM, IOUT_FAULT_LIMIT, OPERATION)"),
+                    }),
+                ),
+            },
+            "MFR_SYSTEM_STATUS": {
+                "DC_OK": (
+                    name: "DC Output Status",
+                    bits: Bit(1),
+                    values: Sentinels({
+                        "DcOutputTooLow":   (0b0, "DC output too low"),
+                        "DcOutputOk":       (0b1, "DC output at a normal range"),
+
+                    }),
+                ),
+                "ADL_ON": (
+                    name: "Active dummy load status",
+                    bits: Bit(4),
+                    values: Sentinels({
+                        "DummyNotActive":  (0b0, "Dummy Load Inactive"),
+                        "DummyActive":     (0b1, "Dummy Load Active"),
+
+                    }),
+                ),
+                "INITIAL_STATE": (
+                    name: "Initial State Indication",
+                    bits: Bit(5),
+                    values: Sentinels({
+                        "NotInitialState":  (0b0, "NOT in an initial state"),
+                        "InitialState":     (0b1, "in an initial state"),
+
+                    }),
+                ),
+                "EEPER": (
+                    name: "EEPROM Access Error",
+                    bits: Bit(6),
+                    values: Sentinels({
+                        "EEPROMAccessingNormally":  (0b0, "EEPROM accessing normally"),
+                        "EEPROMAccessError":        (0b1, "EEPROM access error"),
+
+                    }),
+                ),
+            }
+
+        },
+)

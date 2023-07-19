@@ -1,4 +1,9 @@
 {
+    "hep1000": (
+        manufacturer: "Meanwell",
+        part: "HEP-1000",
+        description: "Industrial Power Supply and Charger"
+    ),
     "adm1272": (
         manufacturer: "Analog Devices",
         part: "ADM1272",
