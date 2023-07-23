@@ -50,13 +50,13 @@
         ("IOUT_OC_FAULT_LIMIT", Linear11, Amperes),
         
         ("READ_VIN", Linear11, Volts),
-        ("READ_VOUT", Linear11, Volts),
+        ("READ_VOUT", VOutMode(Unsigned), Volts),
         ("READ_IOUT", Linear11, Amperes),
         ("READ_TEMPERATURE_1", Linear11, Celsius),
 
-        ("MFR_CURVE_CC", Linear11, Volts),
-        ("MFR_CURVE_CV", Linear11, Volts),
-        ("MFR_CURVE_FV", Linear11, Volts),
+        ("MFR_CURVE_CC", Linear11, Amperes),
+        ("MFR_CURVE_CV", VOutMode(Unsigned), Volts),
+        ("MFR_CURVE_FV", VOutMode(Unsigned), Volts),
         ("MFR_CURVE_TC", Linear11, Amperes),
       
         ("MFR_CURVE_CC_TIMEOUT", Linear11, Seconds),
