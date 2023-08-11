@@ -1509,7 +1509,15 @@ pub mod {} {{
             }} else {{
                 Err(Error::ValueOutOfRange)
             }}
-        }}"##, units, units, units)?;
+        }}
+        pub fn set_with_n(&mut self, val: {}, n: i16) -> Result<(), Error> {{
+            if let Some(lin) = crate::Linear11::from_real_with_n(val.0, n){{
+                self.0 = lin.0;
+                Ok(())
+            }} else {{
+                Err(Error::ValueOutOfRange)
+            }}
+        }}"##, units, units, units, units)?;
         }
 
         Format::VOutMode(_) => {

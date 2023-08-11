@@ -6,7 +6,6 @@
 
         (0x19, "CAPABILITY", Illegal, ReadByte),
 
-        // (0x46, "IOUT_OC_FAULT_LIMIT", WriteWord, ReadWord),
 
         (0x79, "STATUS_WORD", WriteWord, ReadWord),
         (0x7a, "STATUS_VOUT", WriteByte, ReadByte),
@@ -44,11 +43,7 @@
         (0xbf, "MFR_SYSTEM_STATUS", Illegal, ReadWord),
     ],
     numerics:[
-        //("VOUT_MODE", Linear11, Volts),
-        //("VOUT_COMMAND", Linear11, Volts),
-        //("VOUT_TRIM", Linear11, Volts),
         ("IOUT_OC_FAULT_LIMIT", Linear11, Amperes),
-        
         ("READ_VIN", Linear11, Volts),
         ("READ_VOUT", VOutMode(Unsigned), Volts),
         ("READ_IOUT", Linear11, Amperes),

@@ -366,6 +366,17 @@ impl Linear11 {
             Some(Linear11(high | low))
         }
     }
+    pub fn from_real_with_n(x: f32, n: i16) -> Option<Self> {
+        if n < LINEAR11_N_MIN || n > LINEAR11_N_MAX {
+            None
+        } else {
+            let exp = f32::powi(2.0, n.into());
+            let y = x / exp;
+            let high = ((n & LINEAR11_N_MASK) as u16) << LINEAR11_Y_WIDTH;
+            let low = ((y as i16) & LINEAR11_Y_MASK) as u16;
+            Some(Linear11(high | low))
+        }
+    }
 }
 
 #[derive(Copy, Clone, Debug)]
